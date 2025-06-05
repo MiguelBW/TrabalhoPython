@@ -314,3 +314,20 @@ b) Espanha
 c) Argentina
 d) Itália
 Resposta: a) Portugal
+
+46. Quem foi Adolf Hitler?
+a) Um líder político alemão
+b) Um cientista alemão
+c) Um artista alemão
+d) Um escritor alemão
+Resposta: a) Um líder político alemão
+
+47. O que foi o Holocausto?
+a) Um evento desportivo
+b) Um genocídio durante a Segunda Guerra Mundial
+c) Uma revolução política
+d) Uma descoberta científica
+Resposta: b) Um genocídio durante a Segunda Guerra Mundial
+
+
+
