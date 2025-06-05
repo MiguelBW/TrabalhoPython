@@ -1,0 +1,10 @@
+{
+  "perguntas": [
+    {
+      "id": 1,
+      "pergunta": "Qual é a capital de Portugal?",
+      "opcoes": ["Lisboa", "Porto", "Faro", "Braga"],
+      "resposta_correta": "Lisboa"
+    }
+  ]
+}
