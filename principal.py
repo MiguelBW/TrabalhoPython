@@ -2,6 +2,8 @@ import json
 import random
 import os
 
+
+# principal.py
 class Pergunta:
     def __init__(self, id, pergunta, opcoes, resposta_correta):
         self.id = id
