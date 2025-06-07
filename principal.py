@@ -8,7 +8,7 @@ def quizz(nome, pontInicio, multInicio, nPerguntas):
             arrRespostas = respostasF.readlines()
 
         rdmPerguntas = random.sample(range(1,len(arrPerguntas)+1),nPerguntas)
-        opcoes = ['A','B','C']
+        opcoes = ['A','B','C','D']
         opcaoCorreta = ''
         acertos = 0
         falhas = 0
@@ -27,12 +27,12 @@ def quizz(nome, pontInicio, multInicio, nPerguntas):
             y=0
             while y < len(arrRespostas):
                 if x == int(arrRespostas[y]):
-                    for j in range(1, 4):
+                    for j in range(1, 5):
                         linhaResposta = arrRespostas[y + j].rstrip()
                         print(f'{opcoes[j-1]} - {linhaResposta[:-1]}',end='\n')
                         if linhaResposta.endswith('#'):
                             opcaoCorreta = opcoes[j-1]
-                y+=4
+                y+=5
             if input().strip().upper() == opcaoCorreta:
                 print(f'\033[92mCORRETO + {(valorPergunta * multiplicador):.0f} 🗿\033[0m')
                 acertos += 1

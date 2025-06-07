@@ -1,5 +1,3 @@
-卐
-
 1. Quantos pares de costelas um ser humano, normalmente, possui?
 a) 5
 b) 8
