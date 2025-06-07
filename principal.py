@@ -8,7 +8,7 @@ def quizz(nome, pontInicio, multInicio, nPerguntas):
             arrRespostas = respostasF.readlines()
 
         rdmPerguntas = random.sample(range(1,len(arrPerguntas)+1),nPerguntas)
-        opcoes = ['A','B','C','D']
+        opcoes = ['1','2','3','4']
         opcaoCorreta = ''
         acertos = 0
         falhas = 0
