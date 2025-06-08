@@ -20,9 +20,9 @@ def quizz(nome, pontInicio, multInicio, nPerguntas):
         i = 0
         for x  in rdmPerguntas:
             print(f'\n\033[33m╔═══════════════════════════════════════════')
-            print(f'║\033[94mJOGADOR: \033[91m {nome}')
-            print(f'\033[33m║\033[94mPergunta: {i+1} de {nPerguntas}\033[0m\033[92m   Acertou:{acertos}\033[0m\033[91m   Falhou:{falhas}\033[0m',end='')
-            print(f'\n\033[33m║\033[94mMultiplicador: {multiplicador:.2f}x\n\033[33m║\033[0m{arrPerguntas[x-1]}',end='')
+            print(f'║\033[36mJOGADOR: \033[91m {nome}')
+            print(f'\033[33m║\033[36mPergunta: {i+1} de {nPerguntas}\033[0m\033[92m   Acertou:{acertos}\033[0m\033[91m   Falhou:{falhas}\033[0m',end='')
+            print(f'\n\033[33m║\033[36mMultiplicador: {multiplicador:.2f}x\n\033[33m║\033[0m{arrPerguntas[x-1]}',end='')
 
             y=0
             while y < len(arrRespostas):
@@ -44,30 +44,32 @@ def quizz(nome, pontInicio, multInicio, nPerguntas):
                 falhas += 1
                 multiplicador += multFalha
                 
-            print(f'\033[33m╚═══════════════════════════════════════════\n')
+            print(f'\033[33m╠═══════════════════════════════════════════')
             i += 1
-        print(f'\033[94mMultiplicador: {multiplicador:.2f}x\033[0m  \033[92mPONTUAÇÃO: {pontuacao:.0f}\033[0m',end='\n')
-        print(f'\033[94mDe {nPerguntas} Pergunta(s)\033[0m\033[92m   Acertou:{acertos}\033[0m\033[91m   Falhou:{falhas}\033[0m',end='\n')
+        print(f'\033[33m║\033[36mMultiplicador: {multiplicador:.2f}x\033[0m  \033[92mPONTUAÇÃO: {pontuacao:.0f}\033[0m',end='\n')
+        print(f'\033[33m║\033[36mDe {nPerguntas} Pergunta(s)\033[0m\033[92m   Acertou:{acertos}\033[0m\033[91m   Falhou:{falhas}\033[0m',end='\n')
+        print(f'\033[33m╚═══════════════════════════════════════════')
+
         return(pontuacao, multiplicador,acertos,falhas)
     except FileNotFoundError as e:
         print(f'erro: {e}')
         return(pontFinal,multFinal,acertos,falhas)
     
-print(f'\nO multiplicador começa em \033[94m1.00x\033[0m após cada acerto aumenta \033[92m+0.10\033[0m a cada falha diminui \033[91m-0.20\033[0m\nO Jogador com maior pontuação vence, \033[92mBoa Sorte!\033[0m')
+print(f'\nO multiplicador começa em \033[36m1.00x\033[0m após cada acerto aumenta \033[92m+0.10\033[0m a cada falha diminui \033[91m-0.20\033[0m\nO Jogador com maior pontuação vence, \033[92mBoa Sorte!\033[0m')
 jogadores = {}
-qtdJogadores = int(input(f'\033[94mQuantas pessoas irão jogar? \033[0m'))
+qtdJogadores = int(input(f'\033[36mQuantas pessoas irão jogar? \033[0m'))
 
 try:
     perguntasFile = r'dados\perguntas.txt'
     with open(perguntasFile, 'r', encoding='utf-8') as perguntasF:
         arrPerguntas = perguntasF.readlines()
-        nPerguntas = int(input(f'\033[94mQuantas perguntas de \033[91m{len(arrPerguntas)}\033[94m desejam responder? \033[0m'))
+        nPerguntas = int(input(f'\033[36mQuantas perguntas de \033[91m{len(arrPerguntas)}\033[36m desejam responder? \033[0m'))
 except FileNotFoundError as e:
     print(f'erro: {e}')
     quit()
 
 for x in range(qtdJogadores):
-    nome = input(f'\033[94mPlayer \033[91m{x+1}\033[94m Insira seu username: \033[0m')
+    nome = input(f'\033[36mPlayer \033[91m{x+1}\033[36m Insira seu username: \033[0m')
     jogadores[nome] = {'pontuacao': 0.0, 'multiplicador': 1.0, 'acertos': 0, 'falhas': 0}
 
 for nome in jogadores:
@@ -80,7 +82,7 @@ for nome in jogadores:
 
 jogadoresOrdenados = sorted(jogadores.items(), key=lambda item: item[1]['pontuacao'], reverse=True)
 print('\n\033[33m╔════════════════════════════════════════════════════════╗')
-print(f'║               \033[95mRANKING FINAL - {nPerguntas} Perguntas\033[33m              ║')
+print(f'║              \033[95mRANKING FINAL - {nPerguntas} Pergunta(s)\033[33m             ║')
 print('╠════╦════════════════╦════════╦════════╦════════════════╣')
 print('║ \033[36m#\033[33m  ║ \033[36mJogador\033[33m	      ║ \033[36mPts\033[33m    ║ \033[36mMult\033[33m   ║ \033[32mCertas \033[33m/\033[33m \033[31mErros\033[33m ║')
 print('╠════╬════════════════╬════════╬════════╬════════════════╣')
