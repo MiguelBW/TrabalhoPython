@@ -55,20 +55,54 @@ def quizz(nome, pontInicio, multInicio, nPerguntas):
         print(f'erro: {e}')
         return(pontFinal,multFinal,acertos,falhas)
     
+
+
 print(f'\nO multiplicador começa em \033[36m1.00x\033[0m após cada acerto aumenta \033[92m+0.10\033[0m a cada falha diminui \033[91m-0.20\033[0m\nO Jogador com maior pontuação vence, \033[92mBoa Sorte!\033[0m')
 jogadores = {}
-qtdJogadores = int(input(f'\033[36mQuantas pessoas irão jogar? \033[0m'))
+def qtdPerguntas():
+    try:
+        perguntasFile = r'dados\perguntas.txt'
+        with open(perguntasFile, 'r', encoding='utf-8') as perguntasF:
+            arrPerguntas = perguntasF.readlines()
+            totPerguntas = len(arrPerguntas)
+            while True:
+                try:
+                    nPerguntas = int(input(f'\033[36mQuantas perguntas de \033[91m{totPerguntas}\033[36m desejam responder? \033[0m'))
+                    if nPerguntas < 0:
+                        print(f'\033[91mValor não suportado\033[0m')
+                    elif nPerguntas > totPerguntas:
+                        print(f'\033[91mExistem apenas {totPerguntas} Perguntas\033[0m')
+                    elif nPerguntas == 0:
+                        print(f'\033[91mA sair...\033[0m')
+                        quit()
+                    else:
+                        return nPerguntas
+                except ValueError:
+                    print(f'\033[91mPor Favor, Insira um número válido...\033[0m')
+    except FileNotFoundError as e:
+        print(f'erro: {e}')
+        quit()
 
-try:
-    perguntasFile = r'dados\perguntas.txt'
-    with open(perguntasFile, 'r', encoding='utf-8') as perguntasF:
-        arrPerguntas = perguntasF.readlines()
-        nPerguntas = int(input(f'\033[36mQuantas perguntas de \033[91m{len(arrPerguntas)}\033[36m desejam responder? \033[0m'))
-except FileNotFoundError as e:
-    print(f'erro: {e}')
-    quit()
+def qtdJogadores():
+    while True:
+        try:
+            nJogadores = int(input(f'\033[36mQuantas pessoas irão jogar? \033[0m'))
+            if nJogadores < 0:
+                print(f'\033[91mValor não suportado\033[0m')
+            elif nJogadores > 5:
+                print(f'\033[91mO número máximo de jogadores é 5\033[0m')
+            elif nJogadores == 0:
+                print(f'\033[91mA sair...\033[0m')
+                quit()
+            else:
+                return nJogadores
+        except ValueError:
+            print(f'\033[91mPor Favor, Insira um número...\033[0m')
 
-for x in range(qtdJogadores):
+nPerguntas = qtdPerguntas()
+nJogadores = qtdJogadores()
+
+for x in range(nJogadores):
     nome = input(f'\033[36mPlayer \033[91m{x+1}\033[36m Insira seu username: \033[0m')
     jogadores[nome] = {'pontuacao': 0.0, 'multiplicador': 1.0, 'acertos': 0, 'falhas': 0}
 
@@ -82,7 +116,7 @@ for nome in jogadores:
 
 jogadoresOrdenados = sorted(jogadores.items(), key=lambda item: item[1]['pontuacao'], reverse=True)
 print('\n\033[33m╔════════════════════════════════════════════════════════╗')
-print(f'║              \033[95mRANKING FINAL - {nPerguntas} Pergunta(s)\033[33m             ║')
+print('║' + f'\033[95mRANKING FINAL - {nPerguntas} Pergunta(s)\033[33m'.center(66) + '║')
 print('╠════╦════════════════╦════════╦════════╦════════════════╣')
 print('║ \033[36m#\033[33m  ║ \033[36mJogador\033[33m	      ║ \033[36mPts\033[33m    ║ \033[36mMult\033[33m   ║ \033[32mCertas \033[33m/\033[33m \033[31mErros\033[33m ║')
 print('╠════╬════════════════╬════════╬════════╬════════════════╣')
@@ -94,7 +128,7 @@ for i, (nome, dados) in enumerate(jogadoresOrdenados, start=1):
     acertosJ = f'{dados['acertos']} '.rjust(8)
     falhasJ = f' {dados['falhas']}'.ljust(7)
     print(f'║\033[36m{numJ}\033[33m║\033[36m{nomeJ} \033[33m║ \033[36m{pontosJ}\033[0m ║\033[36m{multJ}x \033[33m║\033[32m{acertosJ}\033[33m/\033[31m{falhasJ}\033[33m║')
-    if i < qtdJogadores:
+    if i < nJogadores:
         print('╠════╬════════════════╬════════╬════════╬════════════════╣')
     else:
         print('╚════╩════════════════╩════════╩════════╩════════════════╝\033[0m')
