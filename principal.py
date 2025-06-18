@@ -1,7 +1,8 @@
 import random
+perguntasFile = r'dados\perguntas.txt'
+respostasFile = r'dados\respostas.txt'
+
 def quizz(nome, pontInicio, multInicio, nPerguntas, maiorNome):
-    perguntasFile = r'dados\perguntas.txt'
-    respostasFile = r'dados\respostas.txt'
     try:
         with open(perguntasFile, 'r', encoding='utf-8') as perguntasF, open(respostasFile, 'r', encoding='utf-8') as respostasF:
             arrPerguntas = perguntasF.readlines()
@@ -139,24 +140,186 @@ def mostrarResultados():
         else:
             print('╚════╩═'+('═'*maiorNome)+'╩════════╩════════╩════════════════╝\033[0m')
             
-print(f'\nO multiplicador começa em \033[36m1.00x\033[0m após cada acerto aumenta \033[92m+0.10\033[0m a cada falha diminui \033[91m-0.20\033[0m\nO Jogador com maior pontuação vence, \033[92mBoa Sorte!\033[0m')
-jogadores = {}
-nPerguntas = qtdPerguntas()
-nJogadores = qtdJogadores()
+def jogar():
+    print(f'\nO multiplicador começa em \033[36m1.00x\033[0m após cada acerto aumenta \033[92m+0.10\033[0m a cada falha diminui \033[91m-0.20\033[0m\nO Jogador com maior pontuação vence, \033[92mBoa Sorte!\033[0m')
+    global maiorNome,jogadores,nPerguntas,nJogadores,pontFinal,multFinal
+    jogadores = {}
+    nPerguntas = qtdPerguntas()
+    nJogadores = qtdJogadores()
 
-for x in range(nJogadores):
-    nome = input(f'\033[36mPlayer \033[91m{x+1}\033[36m Insira seu username: \033[0m')
-    jogadores[nome] = {'pontuacao': 0.0, 'multiplicador': 1.0, 'acertos': 0, 'falhas': 0}
+    for x in range(nJogadores):
+        nome = input(f'\033[36mPlayer \033[91m{x+1}\033[36m Insira seu username: \033[0m')
+        jogadores[nome] = {'pontuacao': 0.0, 'multiplicador': 1.0, 'acertos': 0, 'falhas': 0}
+    maiorNome = 15
+    for nome in jogadores:
+        pont, mult = jogadores[nome]['pontuacao'], jogadores[nome]['multiplicador']
+        pontFinal, multFinal, acertos, falhas = quizz(nome, pont, mult, nPerguntas, maiorNome)
+        jogadores[nome]['pontuacao'] = pontFinal
+        jogadores[nome]['multiplicador'] = multFinal
+        jogadores[nome]['acertos'] = acertos
+        jogadores[nome]['falhas'] = falhas
+        if len(nome) > maiorNome:
+            maiorNome = len(nome) + 1
 
-maiorNome = 15
-for nome in jogadores:
-    pont, mult = jogadores[nome]['pontuacao'], jogadores[nome]['multiplicador']
-    pontFinal, multFinal, acertos, falhas = quizz(nome, pont, mult, nPerguntas, maiorNome)
-    jogadores[nome]['pontuacao'] = pontFinal
-    jogadores[nome]['multiplicador'] = multFinal
-    jogadores[nome]['acertos'] = acertos
-    jogadores[nome]['falhas'] = falhas
-    if len(nome) > maiorNome:
-        maiorNome = len(nome) + 1
+    mostrarResultados()
+    
+def lerPerguntas():
+    with open(perguntasFile, 'r', encoding='utf-8') as perguntasF:
+        return(perguntasF.readlines())
+    
+def lerRespostas():
+    with open(respostasFile, 'r', encoding='utf-8') as respostasF:
+        return(respostasF.readlines())
 
-mostrarResultados()
+
+
+def listarPerguntas():
+        arrPerguntas = lerPerguntas()
+        arrRespostas = lerRespostas()
+        if len(arrPerguntas) <= 0:
+            print(f'Não existem perguntas.')
+            return
+        x = 0
+        y = 0
+        found = False
+        while x < len(arrPerguntas):
+            print(f'{x+1} - {arrPerguntas[x].strip()}')
+            while not found:
+                if int(x+1) != int(arrRespostas[y]):
+                    y += 5
+                else:
+                    found = True
+                    for z in range(1,5):
+                        resposta = arrRespostas[y+z].strip()
+                        print(f'Opção {z} - {resposta[:-1]}')
+            print()
+            found = False
+            y = 0
+            x += 1
+def adicionarPergunta():
+    arrPerguntas = lerPerguntas()
+    arrRespostas = lerRespostas()
+    numPerguntas = len(arrPerguntas)
+    
+    pergunta = input('Insira a pergunta que deseja adicionar: ')
+    if numPerguntas < 1:
+        arrPerguntas.append(pergunta)
+        arrRespostas.append(f'{len(arrPerguntas)}')
+    else:
+        arrPerguntas.append('\n' + pergunta)
+        arrRespostas.append(f'\n{len(arrPerguntas)}')
+    
+    print('Insira 4 opções de resposta: ')
+    
+    respostas = []
+    usadas = set()
+
+    for i in range(4):
+        while True:
+            r = input(f'Digite a resposta {i+1}: ').strip().rstrip('.#')
+            if r in usadas:
+                print('Resposta repetida. Digite outra.')
+            else:
+                usadas.add(r)
+                respostas.append(r)
+                break
+
+    correta = int(input('Qual é a resposta correta? (1 a 4): ')) - 1
+
+    for i in range(4):
+        if i == correta:
+            respostas[i] += '#'
+            arrRespostas.append('\n' + respostas[i])
+        else:
+            respostas[i] += '.'
+            arrRespostas.append('\n' + respostas[i])
+            
+    with open(perguntasFile, 'w', encoding='utf-8') as perguntasF:
+        perguntasF.writelines(arrPerguntas)
+
+    with open(respostasFile, 'w', encoding='utf-8') as respostasF:
+        respostasF.writelines(arrRespostas)
+        
+def removerPergunta():
+    while True:
+        try:
+            arrPerguntas = lerPerguntas()
+            arrRespostas = lerRespostas()
+            numPerguntas = len(arrPerguntas)
+            if  numPerguntas <= 0:
+                print(f'Não existem perguntas.')
+                return
+            elif numPerguntas == 1:
+                print(f'Existe 1 pergunta')
+            else:
+                print(f'Existem {numPerguntas} perguntas')
+                
+            num = int(input('Insira o número da pergunta que deseja remover: '))
+            if num == 0:
+                print(f'Nenhuma pergunta foi removida!')
+                return
+            elif num < 1 or num > numPerguntas:
+                print(f'Por favor insira um número válido')
+            else:
+                perguntaRemovida = arrPerguntas.pop(num - 1)
+
+                y = 0
+                found = False
+                while y < len(arrRespostas):
+                    if arrRespostas[y].strip() == str(num):
+                        found = True
+                        for _ in range(5):
+                            arrRespostas.pop(y)
+                        break
+                    y += 5
+
+                if found:
+                    y = 0
+                    nPergunta = 1
+                    while y < len(arrRespostas):
+                        arrRespostas[y] = f'{nPergunta}\n'
+                        nPergunta += 1
+                        y += 5
+                    try:
+                        with open(perguntasFile, 'w', encoding='utf-8') as perguntasF:
+                            perguntasF.writelines(arrPerguntas)
+                        with open(respostasFile, 'w', encoding='utf-8') as respostasF:
+                            respostasF.writelines(arrRespostas)
+                        print(f'Pergunta removida: {perguntaRemovida}')
+                        
+                    except FileNotFoundError as e:
+                        print(f'erro: {e}')
+                        quit()
+                        
+        except ValueError:
+            print(f'Por favor insira um número de 1-{len(arrPerguntas)}')
+def menu():
+    while True:
+        print('╔' + '═' * 25 + '╗')
+        print('║ Perguntas               ║')
+        print('║   1. Listar             ║')
+        print('║   2. Remover            ║')
+        print('║   3. Adicionar          ║')
+        print('║ Jogar                   ║')
+        print('║   4. Go!                ║')
+        print('║   0. Sair               ║')
+        print('╚' + '═' * 25 + '╝')
+
+        opcao = input('Escolha uma opção: ')
+
+        match opcao:
+            case '1':
+                listarPerguntas()
+            case '2':
+                removerPergunta()
+            case '3':
+                adicionarPergunta()
+            case '4':
+                jogar()
+            case '0':
+                print('A Sair...')
+                break
+            case _:
+                print('Opção inválida.')
+
+menu()
