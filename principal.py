@@ -183,7 +183,8 @@ def listarPerguntas():
         y = 0
         found = False
         while x < len(arrPerguntas):
-            print(f'{x+1} - {arrPerguntas[x].strip()}')
+            print('\033[33m'+'═'*50+'\033[0m')
+            print(f'\033[95mPergunta {x+1} \033[0m-\033[36m {arrPerguntas[x].strip()}')
             while not found:
                 if int(x+1) != int(arrRespostas[y]):
                     y += 5
@@ -191,7 +192,12 @@ def listarPerguntas():
                     found = True
                     for z in range(1,5):
                         resposta = arrRespostas[y+z].strip()
-                        print(f'Opção {z} - {resposta[:-1]}')
+                        if resposta.endswith('#'):
+                            print(f'\033[32mOpção {z} - {resposta[:-1]}')
+                        else:
+                            print(f'\033[31mOpção {z} - {resposta[:-1]}')
+                        
+            print('\033[33m'+'═'*50+'\033[0m')
             print()
             found = False
             y = 0
@@ -295,15 +301,15 @@ def removerPergunta():
             print(f'Por favor insira um número de 1-{len(arrPerguntas)}')
 def menu():
     while True:
-        print('╔' + '═' * 25 + '╗')
-        print('║ Perguntas               ║')
-        print('║   1. Listar             ║')
-        print('║   2. Remover            ║')
-        print('║   3. Adicionar          ║')
-        print('║ Jogar                   ║')
-        print('║   4. Go!                ║')
-        print('║   0. Sair               ║')
-        print('╚' + '═' * 25 + '╝')
+        print('╔' + '═' * 20 + '╗')
+        print('║ Perguntas          ║')
+        print('║   1. Listar        ║')
+        print('║   2. Remover       ║')
+        print('║   3. Adicionar     ║')
+        print('║ Jogar              ║')
+        print('║   4. Go!           ║')
+        print('║   0. Sair          ║')
+        print('╚' + '═' * 20 + '╝')
 
         opcao = input('Escolha uma opção: ')
 
