@@ -94,7 +94,7 @@ def qtdPerguntas():
                     elif nPerguntas > totPerguntas:
                         print(f'\033[91mExistem apenas {totPerguntas} Perguntas\033[0m')
                     elif nPerguntas == 0:
-                        print(f'\033[91mA sair...\033[0m')
+                        print(f'\033[91mA sair...')
                         quit()
                     else:
                         return nPerguntas
@@ -113,7 +113,7 @@ def qtdJogadores():
             elif nJogadores > 5:
                 print(f'\033[91mO número máximo de jogadores é 5\033[0m')
             elif nJogadores == 0:
-                print(f'\033[91mA sair...\033[0m')
+                print(f'\033[91mA sair...')
                 quit()
             else:
                 return nJogadores
@@ -141,7 +141,7 @@ def mostrarResultados():
             print('╚════╩═'+('═'*maiorNome)+'╩════════╩════════╩════════════════╝\033[0m')
             
 def jogar():
-    print(f'\nO multiplicador começa em \033[36m1.00x\033[0m após cada acerto aumenta \033[92m+0.10\033[0m a cada falha diminui \033[91m-0.20\033[0m\nO Jogador com maior pontuação vence, \033[92mBoa Sorte!\033[0m')
+    print(f'\n\33[0mO multiplicador começa em \033[36m1.00x\033[0m após cada acerto aumenta \033[92m+0.10\033[0m a cada falha diminui \033[91m-0.20\033[0m\nO Jogador com maior pontuação vence, \033[92mBoa Sorte!\033[0m')
     global maiorNome,jogadores,nPerguntas,nJogadores,pontFinal,multFinal
     jogadores = {}
     nPerguntas = qtdPerguntas()
@@ -207,7 +207,7 @@ def adicionarPergunta():
     arrRespostas = lerRespostas()
     numPerguntas = len(arrPerguntas)
     
-    pergunta = input('Insira a pergunta que deseja adicionar: ')
+    pergunta = input('\033[36mInsira a pergunta: \033[0m')
     if numPerguntas < 1:
         arrPerguntas.append(pergunta)
         arrRespostas.append(f'{len(arrPerguntas)}')
@@ -215,22 +215,22 @@ def adicionarPergunta():
         arrPerguntas.append('\n' + pergunta)
         arrRespostas.append(f'\n{len(arrPerguntas)}')
     
-    print('Insira 4 opções de resposta: ')
+    print('\033[33mInsira 4 opções de resposta: ')
     
     respostas = []
     usadas = set()
 
     for i in range(4):
         while True:
-            r = input(f'Digite a resposta {i+1}: ').strip().rstrip('.#')
+            r = input(f'\033[36mDigite a resposta \033[33m{i+1}\033[36m:\033[0m ').strip().rstrip('.#')
             if r in usadas:
-                print('Resposta repetida. Digite outra.')
+                print('\033[91mResposta repetida. Digite outra.\033[0m')
             else:
                 usadas.add(r)
                 respostas.append(r)
                 break
 
-    correta = int(input('Qual é a resposta correta? (1 a 4): ')) - 1
+    correta = int(input('\033[92mQual é a resposta correta? (1 a 4): ')) - 1
 
     for i in range(4):
         if i == correta:
@@ -239,7 +239,9 @@ def adicionarPergunta():
         else:
             respostas[i] += '.'
             arrRespostas.append('\n' + respostas[i])
-            
+
+    arrPerguntas = [linha.strip() + '\n' for linha in arrPerguntas]
+    arrRespostas = [linha.strip() + '\n' for linha in arrRespostas]
     with open(perguntasFile, 'w', encoding='utf-8') as perguntasF:
         perguntasF.writelines(arrPerguntas)
 
@@ -253,19 +255,26 @@ def removerPergunta():
             arrRespostas = lerRespostas()
             numPerguntas = len(arrPerguntas)
             if  numPerguntas <= 0:
-                print(f'Não existem perguntas.')
+                print('\033[33m╔' + '═' * 23 + '╗')
+                print(f'║\033[91m Não existem perguntas \033[33m║')
+                print('╚' + '═' * 23 + '╝\033[33m')
+            
                 return
             elif numPerguntas == 1:
-                print(f'Existe 1 pergunta')
+                print('\033[33m╔' + '═' * 20 + '╗')
+                print(f'║\033[92m Existe 1 pergunta  \033[33m║')
+                print('╚' + '═' * 20 + '╝\033[33m')
             else:
-                print(f'Existem {numPerguntas} perguntas')
+                print('\033[33m╔' + '═' * 24 + '╗')
+                print(f'║\033[92m  Existem {numPerguntas} perguntas  \033[33m║')
+                print('╚' + '═' * 24 + '╝\033[33m')
                 
-            num = int(input('Insira o número da pergunta que deseja remover: '))
+            num = int(input('Insira o número da pergunta que deseja remover:\033[0m '))
             if num == 0:
-                print(f'Nenhuma pergunta foi removida!')
+                print(f'\033[91mA voltar...')
                 return
             elif num < 1 or num > numPerguntas:
-                print(f'Por favor insira um número válido')
+                print(f'\033[91mPor favor insira um número válido!')
             else:
                 perguntaRemovida = arrPerguntas.pop(num - 1)
 
@@ -287,31 +296,32 @@ def removerPergunta():
                         nPergunta += 1
                         y += 5
                     try:
+                        arrPerguntas = [linha.strip() + '\n' for linha in arrPerguntas]
                         with open(perguntasFile, 'w', encoding='utf-8') as perguntasF:
                             perguntasF.writelines(arrPerguntas)
                         with open(respostasFile, 'w', encoding='utf-8') as respostasF:
                             respostasF.writelines(arrRespostas)
-                        print(f'Pergunta removida: {perguntaRemovida}')
+                        print(f'\033[36mPergunta removida:\033[91m {perguntaRemovida}')
                         
                     except FileNotFoundError as e:
                         print(f'erro: {e}')
                         quit()
                         
         except ValueError:
-            print(f'Por favor insira um número de 1-{len(arrPerguntas)}')
+            print(f'\033[91mPor favor insira um número válido!')
 def menu():
     while True:
-        print('╔' + '═' * 20 + '╗')
-        print('║ Perguntas          ║')
-        print('║   1. Listar        ║')
-        print('║   2. Remover       ║')
-        print('║   3. Adicionar     ║')
-        print('║ Jogar              ║')
-        print('║   4. Go!           ║')
-        print('║   0. Sair          ║')
-        print('╚' + '═' * 20 + '╝')
-
-        opcao = input('Escolha uma opção: ')
+        print('\033[33m╔' + '═' * 20 + '╗')
+        print('║\033[95m Perguntas\033[33m          ║')
+        print('║   \033[36m1. Listar\033[33m        ║')
+        print('║   \033[36m2. Remover\033[33m       ║')
+        print('║   \033[36m3. Adicionar\033[33m     ║')
+        print('║ \033[95mJogar\033[33m              ║')
+        print('║   \033[36m4. Go!\033[33m           ║')
+        print('║   \033[36m0. Sair\033[33m          ║')
+        print('╠' + '═' * 20 + '╣\033[33m')
+        opcao = input('║ Escolha: ')
+        print('╚' + '═' * 20 + '╝\033[33m')
 
         match opcao:
             case '1':
@@ -323,7 +333,7 @@ def menu():
             case '4':
                 jogar()
             case '0':
-                print('A Sair...')
+                print(f'\033[91m A sair...')
                 break
             case _:
                 print('Opção inválida.')
